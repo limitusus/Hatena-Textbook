@@ -58,9 +58,15 @@ sub tweet {
     return $self;
 }
 
+sub tweets {
+    my $self = shift;
+    return $self->{tweets};
+}
+
 # Returns timeline: a reference to array of Tweets
 sub friends_timeline {
     my $self = shift;
+    # TODO: implement
 }
 
 # Internal methods
