@@ -27,6 +27,49 @@ sub duplicated_register_birds : Tests {
     is (X::BirdExists->caught(), 'Bird name b1 already registered.');
 }
 
-__PACKAGE__->runtests;
+sub follow :Tests {
+    my $f = Forest->new;
+    my $b1 = Bird->new(name => "b1", forest => $f);
+    my $b2 = Bird->new(name => "b2", forest => $f);
+    my $b3 = Bird->new(name => "b3", forest => $f);
+    $b1->follow($b2->name);
+    $b1->follow($b3->name);
+    $b2->follow($b1->name);
+    $b2->follow($b3->name);
+    is $b1->followees->[0]->name, "b2";
+    is $b1->followees->[1]->name, "b3";
+    is $b2->followers->[0]->name, "b1";
+    is $b3->followers->[0]->name, "b1";
+    is $b3->followers->[1]->name, "b2";
+    is $b1->followers->[0]->name, "b2";
+    is_deeply ($b1->followees, [$b2, $b3]);
+    is_deeply ($b1->followers, [$b2, ]);
+    is_deeply ($b2->followers, [$b1, ]);
+    is_deeply ($b2->followees, [$b1, $b3]);
+    is_deeply ($b3->followers, [$b1, $b2]);
+}
+
+sub follow_duplicate :Tests {
+    my $f = Forest->new;
+    my $b1 = Bird->new(name => "b1", forest => $f);
+    my $b2 = Bird->new(name => "b2", forest => $f);
+    # Follow twice
+    $b1->follow($b2->name);
+    $b1->follow($b2->name);
+    is_deeply ($b1->followees, [$b2, ]);
+    is_deeply ($b2->followers, [$b1, ]);
+}
+
+sub tweet :Tests {
+    my $f = Forest->new;
+    my $b1 = Bird->new(name => "b1", forest => $f);
+    my $b2 = Bird->new(name => "b2", forest => $f);
+    $b1->follow($b2->name);
+    $b1->tweet("Hello!");
+    is $b1->tweets->[0]->message, "Hello!";
+    is $b2->friends_timeline->[0]->message, "Hello!";
+ }
+
+ __PACKAGE__->runtests;
 
 1;
