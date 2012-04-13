@@ -15,7 +15,11 @@ sub new {
         name => $info{name},
         forest => $info{forest},
     };
-    return bless $self, $class;
+    bless $self, $class;
+    if ($info{forest}) {
+        $info{forest}->onRegister($self);
+    }
+    return $self;
 }
 
 # Accessors
@@ -54,15 +58,24 @@ sub tweet {
     return $self;
 }
 
+# Returns timeline: a reference to array of Tweets
+sub friends_timeline {
+    my $self = shift;
+}
+
 # Internal methods
 
 sub _follow {
     my $self = shift;
     my $followee = shift;
+    push @{$self->{followees}}, $followee;
     return $self;
 }
 
 sub _followed_by {
+    my $self = shift;
+    my $follower = shift;
+    push @{$self->{followers}}, $follower;
 }
 
 sub _tweet {
@@ -71,10 +84,6 @@ sub _tweet {
     my $tweet = Tweet->new(owner => $self->name, message => $message);
     push @{$self->{tweets}}, $tweet;
     return $self;
-}
-
-sub friends_timeline {
-    my $self = shift;
 }
 
 1;
