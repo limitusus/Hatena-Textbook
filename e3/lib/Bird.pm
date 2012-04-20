@@ -66,22 +66,15 @@ sub tweets {
 # Returns timeline: a reference to array of Tweets
 sub friends_timeline {
     my $self = shift;
-    # TODO: implement
     my @timeline_tweets = ();
     for my $followee (@{$self->followees}, $self) {
-        print STDERR $followee->name . "\n";
         for my $tweet (@{$followee->tweets}) {
             push @timeline_tweets, $tweet;
         }
     }
-    print STDERR "\@timeline_tweets = @timeline_tweets\n";
-    for my $t (@timeline_tweets) {
-        print STDERR $t->message . $t->timestamp . $t->timestamp->hires_epoch . $/;
-    }
-    my @sorted_timeline_tweets = sort { $b->timestamp <=> $a->timestamp } @timeline_tweets;
-    for my $t (@timeline_tweets) {
-        print STDERR $t->message . $t->timestamp . $/;
-    }
+    my @sorted_timeline_tweets = sort
+        { $a->timestamp->hires_epoch() <=> $b->timestamp->hires_epoch() }
+        @timeline_tweets;
     return \@sorted_timeline_tweets;
 }
 

@@ -1,14 +1,15 @@
-package test::Forest;
+package test::Tweet;
 use strict;
 use warnings;
 use base qw(Test::Class);
 use Test::More;
+
 use Bird;
 use Tweet;
 use Forest;
 
 sub init : Test(1) {
-    new_ok 'Forest';
+    new_ok 'Tweet';
 }
 
 sub attr : Tests {

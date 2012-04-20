@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use base qw(Test::Class);
 use Test::More;
+
 use Bird;
 use Tweet;
 use Forest;
@@ -23,6 +24,7 @@ sub register_birds : Tests {
 sub duplicated_register_birds : Tests {
     my $f = Forest->new;
     my $b1 = Bird->new(name => "b1", forest => $f);
+    # Duplicated name: throw an exception
     my $b2 = eval { Bird->new(name => "b1", forest => $f) };
     is (X::BirdExists->caught(), 'Bird name b1 already registered.');
 }
@@ -64,13 +66,10 @@ sub tweet :Tests {
     my $f = Forest->new;
     my $b1 = Bird->new(name => "b1", forest => $f);
     my $b2 = Bird->new(name => "b2", forest => $f);
-    #$b1->follow($b2->name);
     $b2->follow($b1->name);
     $b1->tweet("Hello!");
     $b2->tweet("Hi!");
     $b1->tweet("hoge");
-    use Data::Dumper;
-    warn Dumper(\{$b2->friends_timeline});
     is $b1->tweets->[0]->message, "Hello!";
     is $b1->tweets->[1]->message, "hoge";
     is $b2->tweets->[0]->message, "Hi!";
