@@ -64,10 +64,17 @@ sub tweet :Tests {
     my $f = Forest->new;
     my $b1 = Bird->new(name => "b1", forest => $f);
     my $b2 = Bird->new(name => "b2", forest => $f);
-    $b1->follow($b2->name);
+    #$b1->follow($b2->name);
+    $b2->follow($b1->name);
     $b1->tweet("Hello!");
+    $b2->tweet("Hi!");
+    $b1->tweet("hoge");
     is $b1->tweets->[0]->message, "Hello!";
+    is $b1->tweets->[1]->message, "hoge";
+    is $b2->tweets->[0]->message, "Hi!";
     is $b2->friends_timeline->[0]->message, "Hello!";
+    is $b2->friends_timeline->[1]->message, "Hi!";
+    is $b2->friends_timeline->[2]->message, "hoge";
  }
 
  __PACKAGE__->runtests;

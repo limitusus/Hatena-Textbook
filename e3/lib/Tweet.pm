@@ -33,5 +33,10 @@ sub owner {
     return $self->{owner};
 }
 
+sub timestamp {
+    my $self = shift;
+    return $self->{stamp};
+}
+
 1;
 
