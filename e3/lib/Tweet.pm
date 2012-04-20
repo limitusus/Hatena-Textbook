@@ -4,13 +4,15 @@ use strict;
 use warnings;
 
 use DateTime;
+use Time::HiRes;
 
 sub new {
     my $class = shift;
     my %info = @_;
+    my $stamp = Time::HiRes::time();
     my $self = {
         owner => $info{owner},
-        stamp => DateTime->now,
+        stamp => DateTime->from_epoch(epoch => $stamp),
         message => $info{message},
     };
     return bless $self, $class;

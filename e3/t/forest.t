@@ -69,6 +69,8 @@ sub tweet :Tests {
     $b1->tweet("Hello!");
     $b2->tweet("Hi!");
     $b1->tweet("hoge");
+    use Data::Dumper;
+    warn Dumper(\{$b2->friends_timeline});
     is $b1->tweets->[0]->message, "Hello!";
     is $b1->tweets->[1]->message, "hoge";
     is $b2->tweets->[0]->message, "Hi!";
